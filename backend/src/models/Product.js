@@ -1,51 +1,54 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
 
-const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
+const productSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    slug: {
+      type: String,
+      unique: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    brand: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    stock: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    rating: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    description: {
+      type: String,
+    },
   },
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  brand: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  countInStock: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  rating: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  description: {
-    type: String,
-  },
-});
+  { versionKey: false, timestamps: true }
+);
 
 productSchema.pre("save", function (next) {
-  this.slug = slugify(this.name, { lower: true });
+  shortenedName = this.name.slice(0, 40);
+  this.slug = slugify(shortenedName, { lower: true });
   next();
 });
 
