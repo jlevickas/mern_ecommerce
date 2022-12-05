@@ -1,7 +1,9 @@
 import express from "express";
 import { PORT, HOST } from "../config/config.js";
 import productRouter from "./routes/product.routes.js";
-import connectDatabase from "../config/connectDatabase.js";
+import sessionRouter from "./routes/session.routes.js";
+import connectDatabase from "../utils/connectDatabase.js";
+import authenticate from "./middleware/sessionAuth.js";
 
 connectDatabase();
 
@@ -10,7 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/products", productRouter);
+app.use("/api/sessions", sessionRouter);
+app.use("/api/products", authenticate, productRouter);
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
