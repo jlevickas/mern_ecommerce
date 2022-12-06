@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { MONGO_URI } from "../config/config.js";
+import { MONGO_URI } from "../../config/config.js";
 
 const connectDatabase = () => {
   mongoose

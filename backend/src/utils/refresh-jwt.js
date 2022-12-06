@@ -16,11 +16,10 @@ export const startTokenRefreshTimer = (req, res) => {
         expiresIn: "15m",
       });
 
-      // Save the new access token in memory on the server
-      req.session.accessToken = accessToken;
-
       // Restart the token refresh timer with the new access token
       startTokenRefreshTimer(req, res);
+
+      res.send({ accessToken });
     } catch (error) {
       // Handle errors if necessary
     }

@@ -3,19 +3,17 @@ import { JWT_SECRET } from "../../config/config.js";
 import { startTokenRefreshTimer } from "../utils/refresh-jwt.js";
 
 const authenticate = async (req, res, next) => {
-  if (!req.session) {
-    req.session = {};
-  }
+  const accessToken = req.accessToken;
 
   // Check if the access token exists in the request
-  if (!req.session.accessToken) {
+  if (!accessToken) {
     res.status(401).send("Access token not found");
     return;
   }
 
   // Verify the access token
   try {
-    const decoded = jwt.verify(req.session.accessToken, JWT_SECRET);
+    const decoded = jwt.verify(accessToken, JWT_SECRET);
 
     // Add the user's email and expiration time to the request object
     req.user.email = decoded.email;

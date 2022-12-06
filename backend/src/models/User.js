@@ -12,17 +12,11 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      select: false,
     },
-    name: {
-      firstName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
     },
   },
   { versionKey: false, timestamps: true }
@@ -34,5 +28,11 @@ userSchema.pre("save", async function (next) {
 
   next();
 });
+
+userSchema.methods.comparePassword = async function (password) {
+  const user = this;
+
+  return await bcrypt.compare(password, user.password);
+};
 
 export default mongoose.model("User", userSchema);

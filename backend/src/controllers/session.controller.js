@@ -5,7 +5,15 @@ import jwt from "jsonwebtoken";
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.login(email, password);
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Could not find user" });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid login credentials" });
+    }
 
     // Generate a refresh token for the user
     const refreshToken = jwt.sign({ email: user.email }, JWT_SECRET, {
@@ -16,16 +24,19 @@ const userLogin = async (req, res) => {
     const accessToken = jwt.sign({ email: user.email }, JWT_SECRET, {
       expiresIn: "15m",
     });
-
     // Save the refresh token as a cookie
-    res.cookie("refreshToken", refreshToken, { httpOnly: true });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
 
     // Save the access token in memory on the server
-    req.session.accessToken = accessToken;
+    console.log("accessToken", accessToken);
 
-    res.send({ success: true });
+    res.send({ accessToken });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json(error);
   }
 };
 
@@ -43,7 +54,7 @@ const userRegister = async (req, res) => {
   const user = new User(req.body);
   try {
     await user.save();
-    res.status(201).send({ user });
+    res.status(201).send({ success: true });
   } catch (error) {
     res.status(400).send(error);
   }
