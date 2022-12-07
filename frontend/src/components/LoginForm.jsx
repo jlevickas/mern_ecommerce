@@ -4,13 +4,15 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    const user = {
+    let user = {
       email,
       password,
     };
+
+    let accessToken;
 
     fetch("http://localhost:8080/api/session/login", {
       method: "POST",
@@ -22,7 +24,7 @@ function LoginForm() {
       body: JSON.stringify(user),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((token) => (accessToken = token))
       .catch((error) => console.log(error));
   }
 

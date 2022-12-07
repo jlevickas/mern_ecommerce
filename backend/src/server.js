@@ -13,11 +13,18 @@ const app = express();
 
 app.use(
   cors({
-    origin: true,
+    origin: "http://127.0.0.1:5173",
     credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Credentials",
+    ],
   })
 );
+
 app.use(cookieParser());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

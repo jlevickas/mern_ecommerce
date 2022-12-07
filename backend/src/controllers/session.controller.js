@@ -27,12 +27,9 @@ const userLogin = async (req, res) => {
     // Save the refresh token as a cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "None",
       secure: true,
     });
-
-    // Save the access token in memory on the server
-    console.log("accessToken", accessToken);
 
     res.send({ accessToken });
   } catch (error) {
