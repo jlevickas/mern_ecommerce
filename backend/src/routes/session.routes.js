@@ -3,7 +3,7 @@ import {
   userLogin,
   userLogout,
   userRegister,
-  refreshToken,
+  userRefreshToken,
 } from "../controllers/session.controller.js";
 
 const sessionRouter = Router();
@@ -11,6 +11,6 @@ const sessionRouter = Router();
 sessionRouter.post("/login", userLogin);
 sessionRouter.post("/logout", userLogout);
 sessionRouter.post("/register", userRegister);
-sessionRouter.post("/refresh", refreshToken);
+sessionRouter.post("/refresh", userRefreshToken);
 
 export default sessionRouter;

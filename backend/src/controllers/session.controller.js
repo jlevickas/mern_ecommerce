@@ -16,14 +16,23 @@ const userLogin = async (req, res) => {
     }
 
     // Generate a refresh token for the user
-    const refreshToken = jwt.sign({ email: user.email }, JWT_SECRET, {
-      expiresIn: "30d",
-    });
+    const refreshToken = jwt.sign(
+      { email: user.email, username: user.username },
+      JWT_SECRET,
+      {
+        expiresIn: "30d",
+      }
+    );
 
     // Generate an access token for the user
-    const accessToken = jwt.sign({ email: user.email }, JWT_SECRET, {
-      expiresIn: "15m",
-    });
+    const accessToken = jwt.sign(
+      { email: user.email, username: user.username },
+      JWT_SECRET,
+      {
+        expiresIn: "15m",
+      }
+    );
+
     // Save the refresh token as a cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -31,16 +40,16 @@ const userLogin = async (req, res) => {
       secure: true,
     });
 
-    res.send({ accessToken });
+    res.send({
+      accessToken,
+      user: { email: user.email, username: user.username },
+    });
   } catch (error) {
     res.status(400).json(error);
   }
 };
 
 const userLogout = async (req, res) => {
-  // Clear the access token from memory
-  req.session.accessToken = null;
-
   // Delete the refresh token cookie
   res.clearCookie("refreshToken");
 
@@ -57,25 +66,44 @@ const userRegister = async (req, res) => {
   }
 };
 
-const refreshToken = async (req, res) => {
+const userRefreshToken = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
-  // Check if the refresh token is valid
-  try {
-    const decoded = jwt.verify(refreshToken, JWT_SECRET);
+  // Check if the refresh token exists in the request
+  if (!refreshToken) {
+    res.status(401).json("Refresh token not found");
+    return;
+  }
 
-    // Generate a new access token for the user
-    const accessToken = jwt.sign({ email: decoded.email }, JWT_SECRET, {
-      expiresIn: "15m",
+  // Verify the refresh token
+  jwt.verify(refreshToken, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      res.status(401).json("Refresh token expired");
+      return;
+    }
+
+    // Generate a new access token
+    const accessToken = jwt.sign(
+      { email: decoded.email, username: decoded.username },
+      JWT_SECRET,
+      {
+        expiresIn: "15m",
+      }
+    );
+
+    // Save the refresh token as a cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
     });
 
-    // Save the new access token in memory on the server
-    req.session.accessToken = accessToken;
-
-    res.send({ success: true });
-  } catch (error) {
-    res.status(401).send("Invalid refresh token");
-  }
+    // Send the new access token
+    res.send({
+      accessToken,
+      user: { email: decoded.email, username: decoded.username },
+    });
+  });
 };
 
-export { userLogin, userLogout, userRegister, refreshToken };
+export { userLogin, userLogout, userRegister, userRefreshToken };
