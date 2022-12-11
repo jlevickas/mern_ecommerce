@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { TextField, Button, Typography } from "@mui/material";
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
@@ -27,36 +28,37 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="username">Username:</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        value={username}
-        onChange={(event) => setUsername(event.target.value)}
-      />
+    <div id="registration-form">
+      <Typography variant="h4">Register</Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Username"
+          id="username"
+          name="username"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+        />
 
-      <label htmlFor="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-      />
+        <TextField
+          label="Email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
 
-      <label htmlFor="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-      />
+        <TextField
+          label="Password"
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
 
-      <button type="submit">Submit</button>
-    </form>
+        <Button type="submit">Register</Button>
+      </form>
+    </div>
   );
 };
 

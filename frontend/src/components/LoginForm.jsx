@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { Navigate } from "react-router-dom";
+import { TextField, Button, Typography } from "@mui/material";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setAccessToken, accessToken, setUserInfo } = useContext(UserContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -12,9 +16,7 @@ function LoginForm() {
       password,
     };
 
-    let accessToken;
-
-    fetch("http://localhost:8080/api/session/login", {
+    const response = await fetch("http://localhost:8080/api/session/login", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -22,32 +24,33 @@ function LoginForm() {
         "Access-Control-Allow-Credentials": true,
       },
       body: JSON.stringify(user),
-    })
-      .then((response) => response.json())
-      .then((token) => (accessToken = token))
-      .catch((error) => console.log(error));
+    });
+    const data = await response.json();
+    setAccessToken(data.accessToken);
+    setUserInfo(data.user);
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Email:
-        <input
-          type="text"
+    <div>
+      <Typography variant="h4">Log In</Typography>
+
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
-      </label>
-      <label>
-        Password:
-        <input
+
+        <TextField
+          label="Password"
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-      </label>
-      <button type="submit">Login</button>
-    </form>
+
+        <Button type="submit">Login</Button>
+      </form>
+    </div>
   );
 }
 
