@@ -1,5 +1,17 @@
 import React from "react";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import {
+  Menu,
+  MenuItem,
+  Avatar,
+  ListItemIcon,
+  Divider,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+import { Settings, Logout } from "@mui/icons-material";
 
 const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -9,6 +21,30 @@ const ProfileMenu = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const { setAccessToken, userInfo } = useContext(UserContext);
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:8080/api/session/logout", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+        },
+      });
+
+      await setAccessToken(null);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
   };
 
   return (
@@ -22,7 +58,9 @@ const ProfileMenu = () => {
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
         >
-          <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+          <Avatar sx={{ width: 32, height: 32 }}>
+            {userInfo?.username[0].toUpperCase()}
+          </Avatar>
         </IconButton>
       </Tooltip>
 
@@ -61,26 +99,17 @@ const ProfileMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem>
-          <Avatar /> My account
+        <MenuItem onClick={handleProfile}>
+          <Avatar /> {userInfo?.username}
         </MenuItem>
         <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
         <MenuItem>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

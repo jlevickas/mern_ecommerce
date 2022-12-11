@@ -1,22 +1,20 @@
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import { Link } from "react-router-dom";
-import LogoutButton from "../components/LogoutButton";
 import AuthModal from "../components/AuthModal";
+import ProfileMenu from "./ProfileMenu";
 
 const NavBar = () => {
-  const { accessToken, userInfo } = useContext(UserContext);
+  const { accessToken } = useContext(UserContext);
   return (
-    <div>
+    <nav>
       {!accessToken ? (
         <AuthModal />
       ) : (
         <div>
-          <p>Welcome {userInfo?.username}</p>
-          <LogoutButton />
+          <ProfileMenu />
         </div>
       )}
-    </div>
+    </nav>
   );
 };
 

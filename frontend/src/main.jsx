@@ -5,6 +5,7 @@ import ErrorPage from "./pages/ErrorPage";
 import { UserContextProvider } from "./context/UserContext";
 import Root from "./pages/Root";
 import HomePage from "./pages/HomePage";
+import ProductPage from "./pages/ProductPage";
 
 const router = createBrowserRouter([
   {
@@ -13,14 +14,26 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/",
+        index: true,
         element: <HomePage />,
       },
       {
-        path: "/users/:username/",
+        path: "/profile",
         element: <div>User</div>,
       },
+      {
+        path: "/products/:productSlug",
+        element: <ProductPage />,
+      },
     ],
+  },
+  {
+    path: "/admin",
+    element: <div>Admin</div>,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);
 
