@@ -10,9 +10,9 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-export const getProductById = async (req, res) => {
+export const getProductBySlug = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ slug: req.params.slug });
     res.status(200).json(product);
   } catch (error) {
     res.status(404).json({ message: error.message });

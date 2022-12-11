@@ -11,6 +11,8 @@ connectDatabase();
 
 const app = express();
 
+app.use("/public", express.static("public/images"));
+
 app.use(cookieParser());
 app.use(
   cors({

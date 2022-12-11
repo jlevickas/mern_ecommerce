@@ -17,9 +17,9 @@ const productSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    image: {
-      type: String,
-      required: true,
+    images: {
+      type: Array,
+      default: [],
     },
     brand: {
       type: String,
@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.pre("save", function (next) {
-  shortenedName = this.name.slice(0, 40);
+  let shortenedName = this.name.slice(0, 40);
   this.slug = slugify(shortenedName, { lower: true });
   next();
 });
