@@ -6,6 +6,15 @@ import { UserContextProvider } from "./context/UserContext";
 import Root from "./pages/Root";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
+import "./styles/App.css";
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -40,7 +49,10 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <UserContextProvider>
-      <RouterProvider router={router} />
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline enableColorScheme />
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </UserContextProvider>
   </React.StrictMode>
 );

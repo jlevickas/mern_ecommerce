@@ -1,10 +1,10 @@
-import ProductList from "../components/ProductList";
+import ProductCardGrid from "../components/ProductCardGrid";
 
 const HomePage = () => {
   return (
     <div>
       <h1>Home Page</h1>
-      <ProductList />
+      <ProductCardGrid />
     </div>
   );
 };
