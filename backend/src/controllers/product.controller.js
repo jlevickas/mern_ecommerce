@@ -48,3 +48,8 @@ export const deleteProduct = async (req, res) => {
   await Product.findByIdAndRemove(id);
   res.json({ message: "Product deleted successfully" });
 };
+
+export const deleteAllProducts = async (req, res) => {
+  await Product.deleteMany();
+  res.json({ message: "All products deleted successfully" });
+};
