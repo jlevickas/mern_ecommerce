@@ -9,6 +9,10 @@ import ProductPage from "./pages/ProductPage";
 import "./styles/App.css";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminProducts from "./components/AdminDashboard/AdminProducts";
+import AdminUsers from "./components/AdminDashboard/AdminUsers";
+import NewProductForm from "./components/AdminDashboard/NewProductForm";
 
 const darkTheme = createTheme({
   palette: {
@@ -37,8 +41,27 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/admin",
-    element: <div>Admin</div>,
+    path: "admin",
+    element: <AdminDashboard />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "products",
+        element: <AdminProducts />,
+      },
+      {
+        path: "products/edit/:productSlug",
+        element: <div>Edit Product</div>,
+      },
+      {
+        path: "products/create",
+        element: <NewProductForm />,
+      },
+      {
+        path: "users",
+        element: <AdminUsers />,
+      },
+    ],
   },
   {
     path: "*",
